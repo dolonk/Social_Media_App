@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram/resources/auth_methods.dart';
 import 'package:instagram/utils/colors.dart';
+import 'package:instagram/utils/uitls.dart';
 import 'package:instagram/widgets/textfield_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,12 +15,30 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  void _loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethod().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+
+    if (res == 'Success') {
+      //
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -44,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
               //Enter your Email
               TextFieldInput(
                 textEditingController: _emailController,
-                hinText: 'Enter your Email',
+                hintText: 'Enter your Email',
                 textInputType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
@@ -52,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               //Enter password
               TextFieldInput(
                 textEditingController: _passwordController,
-                hinText: 'Enter your Password',
+                hintText: 'Enter your Password',
                 textInputType: TextInputType.text,
                 isPass: true,
               ),
@@ -60,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // login Button
               InkWell(
-                onTap: () {},
+                onTap: () => _loginUser(),
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
@@ -70,10 +90,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                   ),
-                  child: const Text(
-                    'Log in',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Log in',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),

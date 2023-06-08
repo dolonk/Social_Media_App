@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_screenutil:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
@@ -35,6 +36,7 @@ dependencies:
   firebase_auth:
   firebase_core: ^2.13.1
   firebase_storage:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
